@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="topline">
+  <h1>My work orders</h1>
+  {% if current_user.company.role != 'partner' %}
+    <a href="{{ url_for('orders.order_create') }}" class="btn btn-accent">+ New work order</a>
+  {% endif %}
+</div>
+
+<div class="row-list">
+  {% for order in orders %}
+    <div class="ticket status-{{ order.status }}">
+      <div class="ticket-head">
+        <div>
+          <div class="ticket-ref">WO-{{ '%04d' % order.ref }}</div>
+          <div class="ticket-title"><a href="{{ url_for('orders.order_detail', order_id=order._id) }}">{{ order.title }}</a></div>
+          <div class="ticket-meta">{{ work_type_labels[order.work_type] }}</div>
+        </div>
+        <span class="tag tag-{{ order.status }}">{{ status_labels[order.status] }}</span>
+      </div>
+      <div class="ticket-meta mt-16">Budget: {{ '%.2f' % order.budget if order.budget else '—' }}</div>
+    </div>
+  {% else %}
+    <div class="empty-state">No work orders yet.</div>
+  {% endfor %}
+</div>
+
+{% if subcontracts %}
+  <h2 class="mt-16" style="margin-top:32px;">Work offered to us</h2>
+  <div class="row-list">
+    {% for sub in subcontracts %}
+      <div class="ticket status-{{ sub.status }}">
+        <div class="ticket-head">
+          <div>
+            <div class="ticket-ref">WO-{{ '%04d' % sub.work_order.ref }}</div>
+            <div class="ticket-title"><a href="{{ url_for('orders.order_detail', order_id=sub.work_order._id) }}">{{ sub.work_order.title }}</a></div>
+            <div class="ticket-meta">{{ sub.work_order.client_company.name }} &middot; {{ '%.2f' % sub.amount if sub.amount else '—' }}</div>
+          </div>
+          <span class="tag tag-{{ sub.status }}">{{ sub.status.title() }}</span>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}

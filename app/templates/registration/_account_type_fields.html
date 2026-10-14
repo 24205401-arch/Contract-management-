@@ -1,0 +1,48 @@
+<div class="field">
+  <label>Account type</label>
+  <div class="radio-group">
+    <label class="option">
+      <input type="radio" name="account_type" value="new_client" checked>
+      Register a new client company (places orders with us)
+    </label>
+    <label class="option">
+      <input type="radio" name="account_type" value="new_partner">
+      Register a new partner company (does subcontracted work)
+    </label>
+    <label class="option">
+      <input type="radio" name="account_type" value="join">
+      Join a company that's already registered
+    </label>
+  </div>
+</div>
+
+<div class="field" id="company-name-field">
+  <label for="company_name">Company name</label>
+  <input type="text" id="company_name" name="company_name">
+</div>
+
+<div class="field" id="existing-company-field" style="display:none;">
+  <label for="existing_company">Existing company</label>
+  <select id="existing_company" name="existing_company">
+    <option value="">Select a company&hellip;</option>
+    {% for c in companies %}
+      <option value="{{ c._id }}">{{ c.name }} ({{ c.role }})</option>
+    {% endfor %}
+  </select>
+</div>
+
+<script>
+  (function () {
+    var radios = document.querySelectorAll('input[name="account_type"]');
+    var nameField = document.getElementById('company-name-field');
+    var existingField = document.getElementById('existing-company-field');
+    function update() {
+      var selected = document.querySelector('input[name="account_type"]:checked');
+      var isJoin = selected && selected.value === 'join';
+      nameField.style.display = isJoin ? 'none' : 'block';
+      existingField.style.display = isJoin ? 'block' : 'none';
+    }
+    radios.forEach(function (r) { r.addEventListener('change', update); });
+    update();
+  })();
+</script>

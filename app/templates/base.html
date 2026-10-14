@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Dispatch{% endblock %} — Contracting Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      Dispatch
+      <small>Contracting work orders</small>
+    </div>
+    <nav>
+      <a href="{{ url_for('orders.dashboard') }}" class="{{ 'active' if request.endpoint == 'orders.dashboard' }}">Dashboard</a>
+      <a href="{{ url_for('orders.order_list') }}" class="{{ 'active' if request.endpoint == 'orders.order_list' }}">All work orders</a>
+      {% if current_user.company_id and current_user.company.role != 'partner' %}
+        <a href="{{ url_for('orders.order_create') }}" class="{{ 'active' if request.endpoint == 'orders.order_create' }}">+ New work order</a>
+      {% endif %}
+    </nav>
+    <div class="user-box">
+      <div class="who">
+        {{ current_user.username }}
+        <span class="co">{{ current_user.company.name if current_user.company else 'Our company (staff)' }}</span>
+      </div>
+      <form method="post" action="{{ url_for('auth.logout') }}">
+        <button type="submit" class="btn btn-outline-light btn-sm btn-full">Log out</button>
+      </form>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+</div>
+</body>
+</html>

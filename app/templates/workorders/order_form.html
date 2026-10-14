@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}New work order{% endblock %}
+{% block content %}
+<div class="topline"><h1>Raise a new work order</h1></div>
+
+<div class="panel" style="max-width:520px;">
+  <form method="post">
+    <div class="field">
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" required>
+    </div>
+    <div class="field">
+      <label for="description">Description</label>
+      <textarea id="description" name="description" rows="4"></textarea>
+    </div>
+    <div class="field">
+      <label for="work_type">Type of work</label>
+      <select id="work_type" name="work_type">
+        {% for value, label in work_types.items() %}
+          <option value="{{ value }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="budget">Budget (optional)</label>
+      <input type="number" step="0.01" id="budget" name="budget">
+    </div>
+    <div class="field">
+      <label for="deadline">Deadline (optional)</label>
+      <input type="date" id="deadline" name="deadline">
+    </div>
+    <button type="submit" class="btn btn-accent">Submit</button>
+  </form>
+</div>
+{% endblock %}

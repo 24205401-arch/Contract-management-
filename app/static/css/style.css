@@ -1,0 +1,410 @@
+/* ============================================================
+   Design tokens
+   Palette grounded in trade/dispatch documents: deep ink navy,
+   cool paper grey, and a single rust-amber accent used sparingly
+   (like tape/tags on a job ticket) — not a generic SaaS gradient kit.
+   ============================================================ */
+:root {
+  --ink: #1F2A33;
+  --ink-soft: #35424D;
+  --steel: #5C6670;
+  --steel-light: #899299;
+  --paper: #EBEBE7;
+  --panel: #FFFFFF;
+  --line: #D8D9D4;
+  --accent: #B5651D;
+  --accent-soft: #F1E3D3;
+
+  --status-new-bg: #E7E8E5;      --status-new-fg: #4B5259;
+  --status-quoted-bg: #F4E4CE;   --status-quoted-fg: #8A5A18;
+  --status-accepted-bg: #DCE7F2; --status-accepted-fg: #2A5279;
+  --status-sub-bg: #E7E1EF;      --status-sub-fg: #5A4778;
+  --status-progress-bg: #DCEEE7; --status-progress-fg: #2A6E56;
+  --status-done-bg: #DEEFDD;     --status-done-fg: #2E7D4F;
+  --status-cancel-bg: #F3DEDA;   --status-cancel-fg: #9A3F2F;
+
+  --radius: 4px;
+  --shadow: 0 1px 2px rgba(31, 42, 51, 0.08);
+
+  --font-head: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-head);
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 0.5em;
+  letter-spacing: -0.01em;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+p { margin: 0 0 0.75em; }
+
+/* ---------------- Layout shell ---------------- */
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 230px;
+  flex-shrink: 0;
+  background: var(--ink);
+  color: #E9EAE6;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+}
+
+.sidebar .brand {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  margin-bottom: 12px;
+}
+
+.sidebar .brand small {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.72rem;
+  color: #A9B0B6;
+  letter-spacing: 0.03em;
+  margin-top: 2px;
+}
+
+.sidebar nav a {
+  display: block;
+  color: #C7CBCE;
+  padding: 10px 20px;
+  font-size: 0.92rem;
+  border-left: 3px solid transparent;
+}
+
+.sidebar nav a:hover {
+  color: #fff;
+  text-decoration: none;
+  background: rgba(255,255,255,0.04);
+}
+
+.sidebar nav a.active {
+  color: #fff;
+  border-left-color: var(--accent);
+  background: rgba(255,255,255,0.05);
+}
+
+.sidebar .user-box {
+  margin-top: auto;
+  padding: 16px 20px 0;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.sidebar .user-box .who {
+  font-size: 0.85rem;
+  color: #C7CBCE;
+  margin-bottom: 8px;
+}
+.sidebar .user-box .who .co {
+  display: block;
+  font-size: 0.76rem;
+  color: #8A929A;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 32px 40px;
+}
+
+.main-inner {
+  max-width: 880px;
+}
+
+.topline {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ---------------- Auth pages (no sidebar) ---------------- */
+
+.auth-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.auth-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 36px 36px 30px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.auth-card .brand-mark {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.15rem;
+  margin-bottom: 4px;
+}
+
+.auth-card .brand-mark small {
+  display: block;
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: var(--steel);
+  margin-top: 2px;
+}
+
+.auth-card h2 { font-size: 1.25rem; margin-top: 18px; }
+
+/* ---------------- Buttons ---------------- */
+
+.btn {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: var(--ink);
+  color: #fff;
+  line-height: 1.4;
+}
+.btn:hover { background: var(--ink-soft); text-decoration: none; }
+
+.btn-accent { background: var(--accent); }
+.btn-accent:hover { background: #9A5417; }
+
+.btn-outline {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink);
+}
+.btn-outline:hover { background: var(--paper); }
+
+.btn-outline-light {
+  background: transparent;
+  border-color: rgba(255,255,255,0.35);
+  color: #E9EAE6;
+}
+.btn-outline-light:hover { background: rgba(255,255,255,0.08); }
+
+.btn-danger { background: transparent; color: #9A3F2F; border-color: #E3C2B8; }
+.btn-danger:hover { background: var(--status-cancel-bg); }
+
+.btn-sm { font-size: 0.8rem; padding: 5px 11px; }
+.btn-full { width: 100%; display: block; text-align: center; }
+form.inline { display: inline; }
+
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 9px 16px;
+  border-radius: var(--radius);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.btn-google:hover { background: #F7F7F5; text-decoration: none; }
+.btn-google svg { flex-shrink: 0; }
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0;
+  color: var(--steel-light);
+  font-size: 0.78rem;
+}
+.divider::before, .divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* ---------------- Forms ---------------- */
+
+label { display: block; font-size: 0.82rem; font-weight: 500; color: var(--ink-soft); margin-bottom: 4px; }
+.field { margin-bottom: 16px; }
+.help { font-size: 0.76rem; color: var(--steel); margin-top: 3px; }
+
+input[type="text"], input[type="email"], input[type="password"],
+input[type="number"], input[type="date"], textarea, select {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--ink);
+}
+input:focus, textarea:focus, select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+textarea { resize: vertical; }
+
+.radio-group .option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 0.88rem;
+}
+.radio-group .option input { width: auto; margin-top: 3px; }
+
+/* ---------------- Panels / tickets ---------------- */
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+
+.panel-section-title {
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.ticket {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--ink);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 10px;
+}
+.ticket.status-quoted { border-left-color: var(--status-quoted-fg); }
+.ticket.status-accepted { border-left-color: var(--status-accepted-fg); }
+.ticket.status-subcontracted { border-left-color: var(--status-sub-fg); }
+.ticket.status-in_progress { border-left-color: var(--status-progress-fg); }
+.ticket.status-completed { border-left-color: var(--status-done-fg); }
+.ticket.status-cancelled { border-left-color: var(--status-cancel-fg); }
+
+.ticket-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ticket-ref {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--steel);
+  letter-spacing: 0.02em;
+}
+
+.ticket-title { font-size: 1rem; font-weight: 600; margin: 2px 0 2px; }
+.ticket-meta { font-size: 0.82rem; color: var(--steel); }
+
+/* ---------------- Status tags ---------------- */
+
+.tag {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+.tag-new { background: var(--status-new-bg); color: var(--status-new-fg); }
+.tag-quoted { background: var(--status-quoted-bg); color: var(--status-quoted-fg); }
+.tag-accepted { background: var(--status-accepted-bg); color: var(--status-accepted-fg); }
+.tag-subcontracted { background: var(--status-sub-bg); color: var(--status-sub-fg); }
+.tag-in_progress { background: var(--status-progress-bg); color: var(--status-progress-fg); }
+.tag-completed { background: var(--status-done-bg); color: var(--status-done-fg); }
+.tag-cancelled { background: var(--status-cancel-bg); color: var(--status-cancel-fg); }
+
+/* ---------------- Tables / lists ---------------- */
+
+.row-list { display: flex; flex-direction: column; gap: 10px; }
+
+.line-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+.line-item:first-of-type { border-top: none; padding-top: 0; }
+
+.empty-state {
+  color: var(--steel);
+  font-size: 0.88rem;
+  padding: 10px 0;
+}
+
+/* ---------------- Flash messages ---------------- */
+
+.flash {
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  font-size: 0.86rem;
+  margin-bottom: 14px;
+  border: 1px solid transparent;
+}
+.flash-success { background: var(--status-done-bg); color: var(--status-done-fg); border-color: #BEE0C0; }
+.flash-error { background: var(--status-cancel-bg); color: var(--status-cancel-fg); border-color: #E3C2B8; }
+.flash-info { background: var(--status-accepted-bg); color: var(--status-accepted-fg); border-color: #C3D7E7; }
+
+/* ---------------- Utility ---------------- */
+
+.text-muted { color: var(--steel); }
+.mt-16 { margin-top: 16px; }
+.stack > * + * { margin-top: 10px; }
+
+@media (max-width: 760px) {
+  .shell { flex-direction: column; }
+  .sidebar { width: 100%; flex-direction: row; align-items: center; padding: 12px 16px; overflow-x: auto; }
+  .sidebar .brand { border: none; padding: 0 16px 0 0; margin: 0; }
+  .sidebar nav { display: flex; }
+  .sidebar nav a { border-left: none; border-bottom: 2px solid transparent; padding: 6px 10px; white-space: nowrap; }
+  .sidebar nav a.active { border-left: none; border-bottom-color: var(--accent); }
+  .sidebar .user-box { display: none; }
+  .main { padding: 20px; }
+}

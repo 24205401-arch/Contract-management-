@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}WO-{{ '%04d' % order.ref }}{% endblock %}
+{% block content %}
+
+<div class="ticket status-{{ order.status }}">
+  <div class="ticket-head">
+    <div>
+      <div class="ticket-ref">WO-{{ '%04d' % order.ref }}</div>
+      <div class="ticket-title" style="font-size:1.2rem;">{{ order.title }}</div>
+      <div class="ticket-meta">Client: {{ order.client_company.name }} &middot; {{ work_type_labels[order.work_type] }}</div>
+    </div>
+    <span class="tag tag-{{ order.status }}">{{ status_labels[order.status] }}</span>
+  </div>
+  {% if order.description %}<p class="mt-16">{{ order.description }}</p>{% endif %}
+  <div class="ticket-meta">
+    Budget: {{ '%.2f' % order.budget if order.budget else '—' }}
+    &middot; Deadline: {{ order.deadline or '—' }}
+  </div>
+
+  {% if not current_user.company_id %}
+    {% if order.status == 'accepted' %}
+      <form method="post" action="{{ url_for('orders.order_start_in_house', order_id=order._id) }}" class="mt-16">
+        <button type="submit" class="btn btn-accent btn-sm">Start in-house work</button>
+      </form>
+    {% elif order.status == 'in_progress' %}
+      <form method="post" action="{{ url_for('orders.order_mark_completed', order_id=order._id) }}" class="mt-16">
+        <button type="submit" class="btn btn-accent btn-sm">Mark completed</button>
+      </form>
+    {% endif %}
+  {% endif %}
+</div>
+
+<div class="panel">
+  <div class="panel-section-title">Quotes</div>
+  <div class="row-list">
+    {% for quote in order.quotes %}
+      <div class="line-item">
+        <div>
+          <div>{{ '%.2f' % quote.amount }}{% if quote.notes %} &middot; {{ quote.notes }}{% endif %}</div>
+          <div class="ticket-meta">{{ quote.status.title() }}</div>
+        </div>
+        {% if quote.status == 'pending' and current_user.company_id == order.client_company_id %}
+          <form method="post" action="{{ url_for('orders.quote_accept', order_id=order._id, quote_id=quote._id) }}">
+            <button type="submit" class="btn btn-sm btn-outline">Accept</button>
+          </form>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="empty-state">No quotes yet.</div>
+    {% endfor %}
+  </div>
+
+  {% if not current_user.company_id %}
+    <form method="post" action="{{ url_for('orders.quote_create', order_id=order._id) }}" class="mt-16">
+      <div class="field">
+        <label for="amount">Amount</label>
+        <input type="number" step="0.01" id="amount" name="amount" required>
+      </div>
+      <div class="field">
+        <label for="notes">Notes</label>
+        <input type="text" id="notes" name="notes">
+      </div>
+      <button type="submit" class="btn btn-sm btn-outline">Add quote</button>
+    </form>
+  {% endif %}
+</div>
+
+<div class="panel">
+  <div class="panel-section-title">Subcontracting</div>
+  <div class="row-list">
+    {% for sub in order.subcontracts %}
+      <div class="line-item">
+        <div>
+          <div>{{ sub.partner_company.name }}{% if sub.amount %} &middot; {{ '%.2f' % sub.amount }}{% endif %}</div>
+          <div class="ticket-meta">{{ sub.status.title() }}</div>
+        </div>
+        {% if sub.status == 'offered' and current_user.company_id == sub.partner_company_id %}
+          <div>
+            <form method="post" action="{{ url_for('orders.subcontract_respond', order_id=order._id, sub_id=sub._id, action='accept') }}" class="inline">
+              <button type="submit" class="btn btn-sm btn-outline">Accept</button>
+            </form>
+            <form method="post" action="{{ url_for('orders.subcontract_respond', order_id=order._id, sub_id=sub._id, action='decline') }}" class="inline">
+              <button type="submit" class="btn btn-sm btn-danger">Decline</button>
+            </form>
+          </div>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="empty-state">Not subcontracted.</div>
+    {% endfor %}
+  </div>
+
+  {% if not current_user.company_id %}
+    <form method="post" action="{{ url_for('orders.subcontract_create', order_id=order._id) }}" class="mt-16">
+      <div class="field">
+        <label for="partner_company">Partner company</label>
+        <select id="partner_company" name="partner_company" required>
+          <option value="">Select&hellip;</option>
+          {% for c in partner_companies %}
+            <option value="{{ c._id }}">{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="sub_amount">Amount</label>
+        <input type="number" step="0.01" id="sub_amount" name="amount">
+      </div>
+      <div class="field">
+        <label for="sub_notes">Notes</label>
+        <input type="text" id="sub_notes" name="notes">
+      </div>
+      <button type="submit" class="btn btn-sm btn-outline">Offer to partner</button>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "auth_base.html" %}
+{% block title %}Almost done{% endblock %}
+{% block content %}
+<h2>One more step</h2>
+<p class="text-muted" style="font-size:0.85rem;">
+  Signed in with Google as <strong>{{ pending.email or pending.name }}</strong>.
+  Tell us which company you represent to finish setting up your account.
+</p>
+
+<form method="post">
+  {% include "registration/_account_type_fields.html" %}
+  <button type="submit" class="btn btn-accent btn-full">Finish creating account</button>
+</form>
+{% endblock %}

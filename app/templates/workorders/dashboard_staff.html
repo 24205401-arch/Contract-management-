@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="topline">
+  <h1>All work orders</h1>
+</div>
+
+<div class="row-list">
+  {% for order in orders %}
+    <div class="ticket status-{{ order.status }}">
+      <div class="ticket-head">
+        <div>
+          <div class="ticket-ref">WO-{{ '%04d' % order.ref }}</div>
+          <div class="ticket-title"><a href="{{ url_for('orders.order_detail', order_id=order._id) }}">{{ order.title }}</a></div>
+          <div class="ticket-meta">{{ order.client_company.name }} &middot; {{ work_type_labels[order.work_type] }}</div>
+        </div>
+        <span class="tag tag-{{ order.status }}">{{ status_labels[order.status] }}</span>
+      </div>
+      <div class="ticket-meta mt-16">Budget: {{ '%.2f' % order.budget if order.budget else '—' }}</div>
+    </div>
+  {% else %}
+    <div class="empty-state">No work orders yet.</div>
+  {% endfor %}
+</div>
+{% endblock %}
